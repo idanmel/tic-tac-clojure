@@ -1,18 +1,4 @@
-(ns tic-tac-clojure.core
-  (:require [clojure.string :as str]))
-
-
-(defn split [regex txt]
-  (str/split txt regex))
-
-(defn parse-input [txt]
-  (try
-    (->> txt
-         str/trim
-         (split #"\s+")
-         (mapv #(Integer/parseInt %)))
-    (catch Exception e :number-format-exception)))
-
+(ns tic-tac-clojure.core)
 
 (defn player-symbol [state]
   "Returns the player symbol to be placed on the board"
@@ -48,18 +34,3 @@
                                     :board (assoc-in board move (player-symbol state)))
       (already-occupied? state move) (assoc state :status :already-occupied)
       (out-of-bounds? state move) (assoc state :status :out-of-bounds))))
-
-(defn game-ended? [state]
-  (let [{:keys [moves]} state]
-    (if (= 3 (count moves))
-      true
-      false)))
-
-;(defn -main
-;  []
-;  (loop [state init-state]
-;    (println state)
-;    (if (game-ended? state)
-;      (println "game ended")
-;      (recur (turn state (move-it state))))) )
-;
