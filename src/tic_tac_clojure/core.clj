@@ -37,7 +37,8 @@
       (won? board row) row
       (won? board col) col
       (won? board diagonal) diagonal
-      (won? board reverse-diagonal) reverse-diagonal)))
+      (won? board reverse-diagonal) reverse-diagonal
+      :else nil)))
 
 (defn win-status [board coordinates]
   (cond
@@ -48,7 +49,9 @@
 (defn draw-status [board moves]
   "Count the number of moves made and equal it to the number
   of places on the board"
-  (= (inc (count moves)) (reduce + (map count board))))
+  (if (= (inc (count moves)) (reduce + (map count board)))
+    :draw
+    :ok))
 
 (defn place-on-board [state move]
   (let [{:keys [board moves]} state
@@ -57,7 +60,8 @@
     (assoc state :moves (conj moves move)
                  :board new-board
                  :winning-coordinates winning-coordinates
-                 :status (or (win-status new-board winning-coordinates) (draw-status board moves) :ok))))
+                 :status (or (win-status new-board winning-coordinates)
+                             (draw-status board moves)))))
 
 
 (defn turn [state move]
@@ -67,3 +71,16 @@
     (valid-move? state move) (place-on-board state move)
     (already-occupied? state move) (assoc state :status :already-occupied)
     (out-of-bounds? state move) (assoc state :status :out-of-bounds)))
+
+
+(def init-state2
+  {:players "XO"
+   :moves []
+   :board [[-1 -1 -1]
+           [-1 -1 -1]
+           [-1 -1 -1]]
+   :status :ok
+   :winning-coordinates nil})
+
+(turn init-state2 '(0 0))
+(reduce turn init-state2 ['(0 0) '(0 1) '(1 1) '(2 2) '(1 2) '(1 0) '(0 2) '(2 0) '(2 1)])

@@ -23,6 +23,18 @@
              :moves ['(1 1)]
              :board [[-1 -1 -1] [-1 \X -1] [-1 -1 -1]])))))
 
+(deftest invalid-moves
+  (testing "Trying to move to a cell that was already occupied"
+    (is (= (reduce turn init-state ['(1 1) '(1 1)])
+           (assoc init-state
+             :moves ['(1 1)]
+             :board [[-1 -1 -1] [-1 \X -1] [-1 -1 -1]]
+             :status :already-occupied))))
+  (testing "Trying to move to a cell that is not in the board"
+    (is (= (turn init-state '(0 12))
+           (assoc init-state :status :out-of-bounds)))))
+
+
 (deftest winning
   (testing "X had 3 in a row"
     (is (= (reduce turn init-state ['(0 0) '(1 0) '(0 1) '(1 1) '(0 2)])
@@ -53,15 +65,12 @@
              :status :o-won
              :winning-coordinates ['(0 2) '(1 1) '(2 0)])))))
 
-(deftest invalid-moves
-  (testing "Trying to move to a cell that was already occupied"
-    (is (= (reduce turn init-state ['(1 1) '(1 1)])
+
+
+(deftest draw
+  (testing "Game ending in a draw"
+    (is (= (reduce turn init-state ['(0 0) '(0 1) '(1 1) '(2 2) '(1 2) '(1 0) '(0 2) '(2 0) '(2 1)])
            (assoc init-state
-             :moves ['(1 1)]
-             :board [[-1 -1 -1] [-1 \X -1] [-1 -1 -1]]
-             :status :already-occupied))))
-  (testing "Trying to move to a cell that is not in the board"
-    (is (= (turn init-state '(0 12))
-           (assoc init-state :status :out-of-bounds)))))
-
-
+             :moves ['(0 0) '(0 1) '(1 1) '(2 2) '(1 2) '(1 0) '(0 2) '(2 0) '(2 1)]
+             :board [[\X \O \X] [\O \X \X] [\O \X \O]]
+             :status :draw)))))
