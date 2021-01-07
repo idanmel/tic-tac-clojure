@@ -25,10 +25,35 @@
     (= -1 (get-in board move))))
 
 
+(defn won? [board cells]
+  (= 1 (count (set (map #(get-in board %) cells)))))
+
+(map #(get-in [[-1 -1 \X] [-1 -1 -1] [-1 -1 -1]] %) ['(0 4) '(1 2) '(2 2)])
+
+(defn get-winning-coordinates [board [row-number col-number]]
+  (let [row (map #(conj [row-number] %) (range 3))
+        col (map #(conj '() col-number %) (range 3))]
+    (cond
+      (won? board row) row
+      (won? board col) col)))
+
+(defn win-status [board coordinates]
+  (cond
+    (= \X (get-in board (first coordinates))) :x-won
+    (= \O (get-in board (first coordinates))) :o-won
+    :else nil))
+
+(defn draw-status [board moves]
+  (= (inc (count moves)) (reduce + (map count board))))
+
 (defn place-on-board [state move]
-  (let [{:keys [board moves]} state]
+  (let [{:keys [board moves]} state
+        new-board (assoc-in board move (player-symbol state))
+        winning-coordinates (get-winning-coordinates new-board move)]
     (assoc state :moves (conj moves move)
-                 :board (assoc-in board move (player-symbol state)))))
+                 :board new-board
+                 :winning-coordinates winning-coordinates
+                 :status (or (win-status new-board winning-coordinates) (draw-status board moves) :ok))))
 
 
 (defn turn [state move]
