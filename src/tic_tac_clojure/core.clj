@@ -28,14 +28,16 @@
 (defn won? [board cells]
   (= 1 (count (set (map #(get-in board %) cells)))))
 
-(map #(get-in [[-1 -1 \X] [-1 -1 -1] [-1 -1 -1]] %) ['(0 4) '(1 2) '(2 2)])
-
 (defn get-winning-coordinates [board [row-number col-number]]
   (let [row (map #(conj [row-number] %) (range 3))
-        col (map #(conj '() col-number %) (range 3))]
+        col (map #(conj '() col-number %) (range 3))
+        diagonal ['(0 0) '(1 1) '(2 2)]
+        reverse-diagonal ['(0 2) '(1 1) '(2 0)]]
     (cond
       (won? board row) row
-      (won? board col) col)))
+      (won? board col) col
+      (won? board diagonal) diagonal
+      (won? board reverse-diagonal) reverse-diagonal)))
 
 (defn win-status [board coordinates]
   (cond
@@ -44,6 +46,8 @@
     :else nil))
 
 (defn draw-status [board moves]
+  "Count the number of moves made and equal it to the number
+  of places on the board"
   (= (inc (count moves)) (reduce + (map count board))))
 
 (defn place-on-board [state move]
