@@ -83,9 +83,20 @@
                              (draw-status board moves)
                              :ok))))
 
+(def init-state
+  "An example for how the initial board state should look like"
+  {:players "XO"
+   :moves []
+   :board [[-1 -1 -1]
+           [-1 -1 -1]
+           [-1 -1 -1]]
+   :status :ok
+   :winning-coordinates nil})
+
 
 (defn turn [state move]
-  "Given a state and the next move, returns the next state"
+  "This is the only function that should be used from outside this namespace...
+  Given a state and the next move, returns the next state"
   (let [{:keys [board moves]} state]
     (cond
       (empty? move) (assoc state :status :empty-move)

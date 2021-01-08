@@ -3,16 +3,6 @@
             [tic-tac-clojure.core :refer :all]))
 
 
-(def init-state
-  {:players "XO"
-   :moves []
-   :board [[-1 -1 -1]
-           [-1 -1 -1]
-           [-1 -1 -1]]
-   :status :ok
-   :winning-coordinates nil})
-
-
 (deftest valid-move
   (testing "State changes correctly with valid move"
     (let [moves ['(1 1)]]
