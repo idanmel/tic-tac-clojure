@@ -1,7 +1,8 @@
 (ns tic-tac-clojure.core)
 
-(defn player-symbol [state]
+(defn player-symbol
   "Returns the player symbol to be placed on the board"
+  [state]
   (let [{:keys [players moves]} state]
     (->> players
          cycle
@@ -9,35 +10,40 @@
          last)))
 
 
-(defn already-occupied? [state move]
+(defn already-occupied?
   "Returns true when trying to play a cell that was already played before"
+  [state move]
   (let [{:keys [board]} state]
     (char? (get-in board move))))
 
 
-(defn out-of-bounds? [state move]
+(defn out-of-bounds?
   "Returns true when trying to move out of bounds"
+  [state move]
   (nil? (get-in state move)))
 
 
-(defn valid-move? [state move]
+(defn valid-move?
   "It's a valid move if there's an empty space there"
+  [state move]
   (let [{:keys [board]} state]
     (= -1 (get-in board move))))
 
 
-(defn won? [board cells]
+(defn won?
   "One of these spaces is known to be occupied.
   There's a winner if all the cells are occupied
   by the same player"
+  [board cells]
   (= 1 (->> cells                                           ; ['(0 0) '(1 1) '(2 2)]
             (map #(get-in board %))                         ; [\X \X \X]
             set                                             ; #{\X}
             count)))                                        ; 1
 
 
-(defn get-winning-coordinates [board [row-number col-number]]
+(defn get-winning-coordinates
   "Return the winning coordinates"
+  [board [row-number col-number]]
   (let [row (map #(conj [row-number] %) (range 3))
         col (map #(conj '() col-number %) (range 3))
         diagonal ['(0 0) '(1 1) '(2 2)]
@@ -50,27 +56,31 @@
       :else nil)))
 
 
-(defn win-status [board coordinates]
+(defn win-status
   "Return the winning status"
+  [board coordinates]
   (cond
     (= \X (get-in board (first coordinates))) :x-won
     (= \O (get-in board (first coordinates))) :o-won
     :else nil))
 
 
-(defn board-count [board]
+(defn board-count
   "Count the number of cells in the board"
+  [board]
   (reduce + (map count board)))
 
 
-(defn draw-status [board moves]
+(defn draw-status
   "Count the number of moves made and equal it to the number
   of places on the board"
+  [board moves]
   (when (= (inc (count moves)) (board-count board)) :draw))
 
 
-(defn place-on-board [state move]
+(defn place-on-board
   "Place the move on the board and return the appropriate status"
+  [state move]
   (let [{:keys [board moves]} state
         new-board (assoc-in board move (player-symbol state))
         winning-coordinates (get-winning-coordinates new-board move)]
@@ -92,9 +102,10 @@
    :winning-coordinates nil})
 
 
-(defn turn [state move]
+(defn turn
   "This is the only function that should be used from outside this namespace...
   Given a state and the next move, returns the next state"
+  [state move]
   (let [{:keys [board moves]} state]
     (cond
       (empty? move) (assoc state :status :empty-move)
