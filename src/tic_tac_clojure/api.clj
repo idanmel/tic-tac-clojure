@@ -1,4 +1,4 @@
-(ns tic-tac-clojure.core
+(ns tic-tac-clojure.api
   (:require [tic-tac-clojure.impl.utils :as utils]))
 
 

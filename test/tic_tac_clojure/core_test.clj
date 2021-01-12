@@ -1,6 +1,6 @@
 (ns tic-tac-clojure.core-test
   (:require [clojure.test :refer :all]
-            [tic-tac-clojure.core :refer :all]))
+            [tic-tac-clojure.api :refer :all]))
 
 
 (deftest valid-move
