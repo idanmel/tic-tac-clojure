@@ -2,19 +2,17 @@
 
 (defn player-symbol
   "Returns the player symbol to be placed on the board"
-  [state]
-  (let [{:keys [players moves]} state]
-    (->> players
-         cycle
-         (take (inc (count moves)))
-         last)))
+  [{:keys [players moves]}]
+  (->> players
+       cycle
+       (take (inc (count moves)))
+       last))
 
 
 (defn already-occupied?
   "Returns true when trying to play a cell that was already played before"
-  [state move]
-  (let [{:keys [board]} state]
-    (char? (get-in board move))))
+  [{:keys [board]} move]
+  (char? (get-in board move)))
 
 
 (defn out-of-bounds?
@@ -25,9 +23,8 @@
 
 (defn valid-move?
   "It's a valid move if there's an empty space there"
-  [state move]
-  (let [{:keys [board]} state]
-    (= -1 (get-in board move))))
+  [{:keys [board]} move]
+  (= -1 (get-in board move)))
 
 
 (defn won?
