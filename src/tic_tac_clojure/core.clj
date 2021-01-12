@@ -66,9 +66,7 @@
 (defn draw-status [board moves]
   "Count the number of moves made and equal it to the number
   of places on the board"
-  (if (= (inc (count moves)) (board-count board))
-    :draw
-    nil))
+  (when (= (inc (count moves)) (board-count board)) :draw))
 
 
 (defn place-on-board [state move]
