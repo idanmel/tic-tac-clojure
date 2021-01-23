@@ -16,11 +16,10 @@
 (defn turn
   "This is the only function that should be used from outside this namespace...
   Given a state and the next move, returns the next state"
-  [state move]
-  (let [{:keys [board moves]} state]
-    (cond
-      (empty? move) (assoc state :status :empty-move)
-      (= (count moves) (utils/board-count board)) (assoc state :status :too-many-moves)
-      (utils/valid-move? state move) (utils/place-on-board state move)
-      (utils/already-occupied? state move) (assoc state :status :already-occupied)
-      (utils/out-of-bounds? state move) (assoc state :status :out-of-bounds))))
+  [{:keys [board moves] :as state} move]
+  (cond
+    (empty? move) (assoc state :status :empty-move)
+    (= (count moves) (utils/board-count board)) (assoc state :status :too-many-moves)
+    (utils/valid-move? state move) (utils/place-on-board state move)
+    (utils/already-occupied? state move) (assoc state :status :already-occupied)
+    (utils/out-of-bounds? state move) (assoc state :status :out-of-bounds)))

@@ -77,9 +77,8 @@
 
 (defn place-on-board
   "Place the move on the board and return the appropriate status"
-  [state move]
-  (let [{:keys [board moves]} state
-        new-board (assoc-in board move (player-symbol state))
+  [{:keys [board moves] :as state} move]
+  (let [new-board (assoc-in board move (player-symbol state))
         winning-coordinates (get-winning-coordinates new-board move)]
     (assoc state :moves (conj moves move)
                  :board new-board
